@@ -1,0 +1,32 @@
+#include <opencv2/highgui/highgui.hpp>      
+#include <opencv2/imgproc/imgproc.hpp>  
+#include <iostream>  
+
+using namespace cv;
+
+int main(int argc, char* argv[])
+{
+	Mat image = imread("pku.jpg", 1);
+	if (image.empty())
+	{
+		std::cout << "打开图片失败,请检查" << std::endl;
+		return -1;
+	}
+	imshow("原图像", image);
+	Mat imageEnhance;
+	Mat kernel = (Mat_<float>(3, 3) << -1, -1, -1, -1, 8, -1, -1, -1, -1);
+	filter2D(image, imageEnhance, CV_8UC3, kernel);
+	imshow("提取边界1", imageEnhance);
+	Mat imageEnhance2 = image + imageEnhance;
+	imshow("锐化效果1", imageEnhance2);
+	Mat imageEnhance3;
+	Mat kernel2 = (Mat_<float>(3, 3) << 0, -1, 0, -1, 4, -1, 0, -1, 0);
+	filter2D(image, imageEnhance3, CV_8UC3, kernel2);
+	imshow("提取边界2", imageEnhance3);
+	Mat imageEnhance4 = image + imageEnhance3;
+	imshow("锐化效果2", imageEnhance4);
+
+
+	waitKey();
+	return 0;
+}
